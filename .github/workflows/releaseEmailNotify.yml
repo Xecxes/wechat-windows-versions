@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 'Send mail'
+      - name: Send mail
         uses: dawidd6/action-send-mail@v6
         with:
           server_address: smtp.qq.com
