@@ -9,11 +9,14 @@ jobs:
   notify_to_tg:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Check new version and push
-        env: 
-          GHTOKEN: ${{ secrets.GHTOKEN }}
-          BOTTOKEN: ${{ secrets.BOTTOKEN }}
-          CHATIDS: ${{ secrets.CHATIDS }}
-        # run: bash -x ./scripts/notify.sh
-        run: echo "暂时弃用通知"
+      - uses: actions/checkout@v4
+      - name: 'Send mail'
+        uses: dawidd6/action-send-mail@v6
+        with:
+          server_address: smtp.qq.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: New Wechat Client Release(${{GITHUB_REF_NAME}})
+          to: wlx0812@gmail.com
+          from: GitHub Actions
