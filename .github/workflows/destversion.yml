@@ -46,7 +46,8 @@ jobs:
           echo "Captured Link: $LINK_RESULT"
           
           # 将结果设置为 output 供后续步骤使用
-          echo "::set-output name=download_link::$LINK_RESULT"
+          # echo "::set-output name=download_link::$LINK_RESULT"
+          echo  "download_link=$LINK_RESULT" >> $GITHUB_OUTPUT
           
       - name: Check new version and push
     
