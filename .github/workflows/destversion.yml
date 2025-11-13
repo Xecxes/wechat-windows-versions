@@ -33,6 +33,10 @@ jobs:
           # 验证安装是否成功
           pup --version
           
+      - name: Run Shell Script with pup
+        # 赋予脚本执行权限
+        run: chmod +x grab_link.sh
+        
       - name: Execute Shell Script
         id: scrape_output
         run: |
