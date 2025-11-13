@@ -34,7 +34,7 @@ jobs:
         # xvfb-run 用于在虚拟屏幕中运行命令，确保无头渲染成功
         run: |
           # 运行 Python 脚本并捕获输出
-          FULL_LINK=$(xvfb-run python get_wechat_link.py)
+          FULL_LINK=$(xvfb-run python ./scripts/get_wechat_link.py)
           
           # 将结果打印到日志
           echo "Captured Link: $FULL_LINK"
