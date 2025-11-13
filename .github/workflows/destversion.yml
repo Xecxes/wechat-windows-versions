@@ -15,7 +15,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          # 使用一个稳定的 Python 版本
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          # requests-html 依赖于 lxml，并要求安装一些系统库
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev libffi-dev xvfb
+          
+          # xvfb（X Virtual Framebuffer）用于在无头环境中模拟图形界面，
+          # 以支持 requests-html 内部依赖的 Chromium 渲染。
+          
+          pip install requests-html
+      - name: Execute Link Scraper
+        # xvfb-run 用于在虚拟屏幕中运行命令，确保无头渲染成功
+        run: |
+          # 运行 Python 脚本并捕获输出
+          FULL_LINK=$(xvfb-run python get_wechat_link.py)
+          
+          # 将结果打印到日志
+          echo "Captured Link: $FULL_LINK"
+          
+          # 设置为环境变量：
+          echo "::set-output name=download_link::$FULL_LINK"
+        id: scrape_output
       - name: Check new version and push
         env: 
           GHTOKEN: ${{ secrets.GH_TOKEN }}
-        run: bash -x ./scripts/destVersionRelease.sh ${{ github.event.inputs.download_link }}
+        run: bash -x ./scripts/destVersionRelease.sh ${{ steps.scrape_output.outputs.download_link }}
