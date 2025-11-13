@@ -15,34 +15,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          # 使用一个稳定的 Python 版本
-          python-version: '3.x'
-      - name: Install dependencies
+          # 使用一个您偏好的 Go 版本
+          go-version: '1.24'
+          
+      - name: Install pup (HTML Parser)
         run: |
-          # requests-html 依赖于 lxml，并要求安装一些系统库
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev libffi-dev xvfb
+          # 使用 go install 安装 pup
+          go install github.com/ericchiang/pup@latest
           
-          # xvfb（X Virtual Framebuffer）用于在无头环境中模拟图形界面，
-          # 以支持 requests-html 内部依赖的 Chromium 渲染。
+          # 确保 GOPATH/bin 目录在 PATH 中 (GitHub Actions默认应该配置了，但这里显式添加更保险)
+          echo "::add-path::$(go env GOPATH)/bin"
           
-          pip install requests-html
-      - name: Execute Link Scraper
-        # xvfb-run 用于在虚拟屏幕中运行命令，确保无头渲染成功
-        run: |
-          # 运行 Python 脚本并捕获输出
-          FULL_LINK=$(xvfb-run python ./scripts/get_wechat_link.py)
+          # 验证安装是否成功
+          pup --version
           
-          # 将结果打印到日志
-          echo "Captured Link: $FULL_LINK"
-          
-          # 设置为环境变量：
-          echo "::set-output name=download_link::$FULL_LINK"
+      - name: Execute Shell Script
         id: scrape_output
+        run: |
+          # 执行您的脚本，并将结果捕获
+          LINK_RESULT=$(./scripts/grab_link.sh)
+          
+          echo "Captured Link: $LINK_RESULT"
+          
+          # 将结果设置为 output 供后续步骤使用
+          echo "::set-output name=download_link::$LINK_RESULT"
+          
       - name: Check new version and push
+    
         env: 
           GHTOKEN: ${{ secrets.GH_TOKEN }}
         run: bash -x ./scripts/destVersionRelease.sh ${{ steps.scrape_output.outputs.download_link }}
