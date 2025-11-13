@@ -35,7 +35,7 @@ jobs:
           
       - name: Run Shell Script with pup
         # 赋予脚本执行权限
-        run: chmod +x grab_link.sh
+        run: chmod +x ./scripts/grab_link.sh
         
       - name: Execute Shell Script
         id: scrape_output
