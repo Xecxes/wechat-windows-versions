@@ -28,7 +28,7 @@ jobs:
           go install github.com/ericchiang/pup@latest
           
           # 确保 GOPATH/bin 目录在 PATH 中 (GitHub Actions默认应该配置了，但这里显式添加更保险)
-          echo "::add-path::$(go env GOPATH)/bin"
+          # echo "::add-path::$(go env GOPATH)/bin"
           
           # 验证安装是否成功
           pup --version
