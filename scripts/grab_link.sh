@@ -25,7 +25,6 @@ if [ -z "$GRABBED_LINK" ]; then
     echo "❌ 错误：未能找到匹配选择器 '$CSS_SELECTOR' 的超链接。"
     echo "⚠️ 警告：此失败很可能因为目标网站（${TARGET_URL}）的内容是动态加载的，纯静态解析工具（如 pup）无法抓取。"
 else
-    echo "✅ 成功抓取到的超链接："
     # 补上协议头
     if [[ "$GRABBED_LINK" == //* ]]; then
         FULL_LINK="https:$GRABBED_LINK"
